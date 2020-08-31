@@ -36,12 +36,12 @@ module.exports = function (user, userReqData) {
   }
   if (userReqData.temp_addr) {
     user.address.temp_addr =
-      typeof userReqData.temp_addr === "string" && user.temp_addr.split(",");
+      typeof user.address.temp_addr === "string" &&
+      userReqData.temp_addr.split(",");
   }
   if (userReqData.permanent_addr) {
-    user.address.permanent_addr = user.permanent_addr;
+    user.address.permanent_addr = userReqData.permanent_addr;
   }
 
-  //   s
   return user;
 };
