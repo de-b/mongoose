@@ -1,4 +1,6 @@
 module.exports = function (user, userReqData) {
+  console.log("USer >>>", user);
+  console.log("userdata", userReqData);
   if (userReqData.name) {
     user.name = userReqData.name;
   }
@@ -29,7 +31,7 @@ module.exports = function (user, userReqData) {
   if (userReqData.status) {
     user.status = userReqData.status;
   }
-  if (!userReqData.address) {
+  if (!user.address) {
     user.address = {};
   }
   if (userReqData.temp_addr) {
@@ -37,7 +39,9 @@ module.exports = function (user, userReqData) {
       typeof userReqData.temp_addr === "string" && user.temp_addr.split(",");
   }
   if (userReqData.permanent_addr) {
-    user.address.permanent_addr = user.permanent_addr.split(",");
+    user.address.permanent_addr = user.permanent_addr;
   }
+
+  //   s
   return user;
 };

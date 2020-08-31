@@ -47,10 +47,10 @@ router
     //   permanent_addr: req.body.permanent_addr,
     // };
     const newMappedUser = MapUser(newUser, req.body);
-    console.log("new mapped user >>>>>", newMappedUser);
+    // console.log("new mapped user >>>>>", newMappedUser);
 
     //this is now saving data into db
-    newMappedUser.save(function (err, done) {
+    newUser.save(function (err, done) {
       if (err) {
         return next(err);
       }
