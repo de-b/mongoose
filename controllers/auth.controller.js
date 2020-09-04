@@ -1,21 +1,48 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const UserModel = require("../model/user.model");
-const MapUser = require("../helpers/mapUserRequest");
+const UserModel = require('../model/user.model');
+const MapUser = require('../helpers/mapUserRequest');
 
-router.get("/", function (req, res, next) {
+const bcrypt = require('bcrypt');
+
+router.get('/', function (req, res, next) {
   res.json({
-    msg: "hellow from auth",
+    msg: 'hellow from auth',
   });
 });
 
-router.route("/login").post(function (req, res, next) {
+router.route('/login').post(function (req, res, next) {
   UserModel.findOne({
     // if use find only then it will output array but if use findOne it will output object
     userName: req.body.userName,
   })
-    .then(function (data) {
-      res.json(data);
+    .then(function (user) {
+      //res.json(user);
+      if (user) {
+        bcrypt.compare(req, body.password, hash, function (err, res) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(res);
+          }
+        });
+        // console.log(isMatched);
+        // if (isMatched) {
+        //   console.log('yes password matched', isMatched);
+        //   res.json(user);
+        // } else {
+        //   next({
+        //     msg: 'invalid password',
+        //     err: err,
+        //   });
+        // }
+      } else {
+        next({
+          msg: 'invalid user',
+          status: 400,
+          err: err,
+        });
+      }
     })
     .catch(function (err) {
       next(err);
@@ -23,12 +50,12 @@ router.route("/login").post(function (req, res, next) {
     });
 });
 router
-  .route("/register")
+  .route('/register')
   //   .get(function (req, res, next) {
   //     res.send("tests get");
   //   })
   .post(function (req, res, next) {
-    console.log("req body >>>>", req.body);
+    //console.log("req body >>>>", req.body);
     const newUser = new UserModel({});
     //newUser is mongoose object
     // newUser.name = req.body.name;
@@ -50,7 +77,7 @@ router
     // console.log("new mapped user >>>>>", newMappedUser);
 
     //this is now saving data into db
-    newUser.save(function (err, done) {
+    newMappedUser.save(function (err, done) {
       if (err) {
         return next(err);
       }

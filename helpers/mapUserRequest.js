@@ -1,6 +1,6 @@
 module.exports = function (user, userReqData) {
-  console.log("USer >>>", user);
-  console.log("userdata", userReqData);
+  //   console.log("USer >>>", user);
+  //   console.log("userdata", userReqData);
   if (userReqData.name) {
     user.name = userReqData.name;
   }

@@ -7,9 +7,9 @@ const UserModel = require("../model/user.model");
 router
   .route("/")
   .get(function (req, res, next) {
-    UserModel.find({}, { userName: 1, email: 1 }) // second parameter, now it will output username & email only
+    UserModel.find({}, { userName: 1, email: 1, password: 1 }) // second parameter, now it will output username & email only
       .sort({ _id: -1 }) // descending order
-      .limit(4) // will show only 2
+      .limit(19) // will show only 2
       .exec(function (err, data) {
         if (err) {
           return next(err);
