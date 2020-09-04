@@ -3,7 +3,7 @@ const router = express.Router();
 const UserModel = require('../model/user.model');
 const MapUser = require('../helpers/mapUserRequest');
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 router.get('/', function (req, res, next) {
   res.json({
@@ -19,23 +19,7 @@ router.route('/login').post(function (req, res, next) {
     .then(function (user) {
       //res.json(user);
       if (user) {
-        bcrypt.compare(req, body.password, hash, function (err, res) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log(res);
-          }
-        });
-        // console.log(isMatched);
-        // if (isMatched) {
-        //   console.log('yes password matched', isMatched);
-        //   res.json(user);
-        // } else {
-        //   next({
-        //     msg: 'invalid password',
-        //     err: err,
-        //   });
-        // }
+        res.json(user);
       } else {
         next({
           msg: 'invalid user',
@@ -81,7 +65,18 @@ router
       if (err) {
         return next(err);
       }
+
       res.json(done);
+
+      // bcrypt.hash(newMappedUser.password, 8, function (err, hash) {
+      //   if (err) {
+      //     return next(err);
+      //   }
+      //   // console.log(hash);
+      //   newMappedUser.password = hash;
+      //   //console.log(newMappedUser.password);
+      //   res.json(done);
+      // });
     });
   });
 

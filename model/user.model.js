@@ -44,10 +44,10 @@ const UserSchema = new Schema({
   },
 });
 
-UserSchema.pre('save', async function (next) {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-});
+// UserSchema.pre('save', async function (next) {
+//   const salt = await bcrypt.genSalt(10);
+//   this.password = await bcrypt.hash(this.password, salt);
+// });
 
 // bcrypt.genSalt(10, function (err, salt) {
 //   bcrypt.hash('B4c0//', salt, function (err, hash) {
