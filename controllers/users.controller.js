@@ -1,11 +1,11 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
-const UserModel = require("../model/user.model");
+const UserModel = require('../model/user.model');
 
 /* GET users listing. */
 
 router
-  .route("/")
+  .route('/')
   .get(function (req, res, next) {
     UserModel.find({}, { userName: 1, email: 1, password: 1 }) // second parameter, now it will output username & email only
       .sort({ _id: -1 }) // descending order
@@ -22,7 +22,7 @@ router
   .delete(function (req, res, next) {});
 
 router
-  .route("/:id") //dynamic
+  .route('/:id') //dynamic
   .get(function (req, res, next) {
     //here we can use anything like findOne
     // UserModel.findOne({_id: req.params.id}, function(err,result){
@@ -33,13 +33,13 @@ router
         if (result) {
           res.json(result);
         } else {
-          next({ msg: "user not found" });
+          next({ msg: 'user not found' });
         }
       })
-      .catch((err) => next({ msg: "user not found", err: err }));
+      .catch((err) => next({ msg: 'user not found', err: err }));
   })
   .post(function (req, res, next) {
-    res.send("sadfsdf");
+    res.send('sadfsdf');
   })
 
   .delete(function (req, res, next) {
@@ -53,10 +53,10 @@ router
             res.json(done);
           });
         } else {
-          next({ msg: "user not found" });
+          next({ msg: 'user not found' });
         }
       })
-      .catch((err) => next({ msg: "user not found", err: err }));
+      .catch((err) => next({ msg: 'user not found', err: err }));
   })
 
   .put((req, res, next) => {
@@ -95,24 +95,24 @@ router
           }
           if (req.body.temp_addr) {
             result.address.temp_addr =
-              typeof req.body.temp_addr === "string" &&
-              req.body.temp_addr.split(",");
+              typeof req.body.temp_addr === 'string' &&
+              req.body.temp_addr.split(',');
           }
           if (req.body.permanent_addr) {
-            result.address.permanent_addr = req.body.permanent_addr.split(",");
+            result.address.permanent_addr = req.body.permanent_addr.split(',');
           }
 
           result.save(function (err, done) {
             if (err) {
-              return next({ msg: "what is the error", err: err });
+              return next({ msg: 'what is the error', err: err });
             }
             res.json(done);
           });
         } else {
-          next({ msg: "user not found during update" });
+          next({ msg: 'user not found during update' });
         }
       })
-      .catch((err) => next({ msg: "user not found", err: err }));
+      .catch((err) => next({ msg: 'user not found', err: err }));
   });
 
 module.exports = router;
