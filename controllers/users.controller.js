@@ -1,13 +1,14 @@
 var express = require('express');
 var router = express.Router();
 const UserModel = require('../model/user.model');
+const isUserAdmin = require('../middlewares/isUserAdmin');
 
 /* GET users listing. */
 
 router
   .route('/')
   .get(function (req, res, next) {
-    UserModel.find({}, { userName: 1, email: 1, password: 1 }) // second parameter, now it will output username & email only
+    UserModel.find({}, { userName: 1, email: 1, password: 1, role: 1 }) // second parameter, now it will output username & email only
       .sort({ _id: -1 }) // descending order
       .limit(19) // will show only 2
       .exec(function (err, data) {
@@ -42,7 +43,15 @@ router
     res.send('sadfsdf');
   })
 
-  .delete(function (req, res, next) {
+  .delete(isUserAdmin, function (req, res, next) {
+    // if (req.anyVarName.role !== 1) {
+    //   // this is coming from authentication anyVarName
+    //   return next({
+    //     msg:
+    //       'you dont have permission, you are not admin, this message coming from delete function',
+    //     status: 403,
+    //   });
+    // }
     UserModel.findById(req.params.id)
       .then((result) => {
         if (result) {
@@ -53,6 +62,7 @@ router
             res.json(done);
           });
         } else {
+          console.log('check is useradmin:', isUserAdmin);
           next({ msg: 'user not found' });
         }
       })

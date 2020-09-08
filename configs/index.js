@@ -1,0 +1,4 @@
+module.exports = {
+  jwtSecret:
+    '5a6acd0f9f61ca84da4b8411f2ae29d9e43133ea29d403c6c0f7396ad812874545009fe25b1e2d59d3eee5722fe1a7754ac2948d74e1080a464c53336b2ae6fe',
+};

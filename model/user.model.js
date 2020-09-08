@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 
 const UserSchema = new Schema({
   //db modelling
@@ -21,6 +21,7 @@ const UserSchema = new Schema({
     type: String,
     unique: true,
     required: true,
+    sparse: true,
   },
   address: {
     temp_addr: [String],
@@ -47,12 +48,6 @@ const UserSchema = new Schema({
 // UserSchema.pre('save', async function (next) {
 //   const salt = await bcrypt.genSalt(10);
 //   this.password = await bcrypt.hash(this.password, salt);
-// });
-
-// bcrypt.genSalt(10, function (err, salt) {
-//   bcrypt.hash('B4c0//', salt, function (err, hash) {
-//     // Store hash in your password DB.
-//   });
 // });
 
 const userModel = mongoose.model('user', UserSchema);

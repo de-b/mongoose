@@ -3,7 +3,21 @@ const router = express.Router();
 const UserModel = require('../model/user.model');
 const MapUser = require('../helpers/mapUserRequest');
 
-const bcrypt = require('bcryptjs');
+const passwordHash = require('password-hash');
+const config = require('../configs/index');
+
+const jwt = require('jsonwebtoken');
+
+//this function is using on login router where we are creating token during login
+function createToken(data) {
+  let token = jwt.sign(
+    { _id: data.id }, // just use _id, its enough because its unique
+    config.jwtSecret
+  );
+  return token;
+}
+
+// const bcrypt = require('bcryptjs');
 
 router.get('/', function (req, res, next) {
   res.json({
@@ -36,25 +50,33 @@ router
     //   permanent_addr: req.body.permanent_addr,
     // };
     const newMappedUser = MapUser(newUser, req.body);
+
+    newMappedUser.password = passwordHash.generate(req.body.password);
+    newMappedUser.save(function (err, done) {
+      if (err) {
+        return next({ msg: 'User not registered', err: err });
+      }
+      res.json(done);
+    });
     // console.log("new mapped user >>>>>", newMappedUser);
 
     //this is now saving data into db
 
-    bcrypt.genSalt(10, function (err, salt) {
-      bcrypt.hash(newMappedUser.password, salt, function (err, hash) {
-        if (err) {
-          return next(err);
-        } else {
-          newMappedUser.password = hash;
-          newMappedUser.save(function (err, done) {
-            if (err) {
-              return next('error password', err);
-            }
-            res.json(done);
-          });
-        }
-      });
-    });
+    // bcrypt.genSalt(10, function (err, salt) {
+    //   bcrypt.hash(newMappedUser.password, salt, function (err, hash) {
+    //     if (err) {
+    //       return next(err);
+    //     } else {
+    //       newMappedUser.password = hash;
+    //       newMappedUser.save(function (err, done) {
+    //         if (err) {
+    //           return next('error password', err);
+    //         }
+    //         res.json(done);
+    //       });
+    //     }
+    //   });
+    // });
   });
 
 router.route('/login').post(function (req, res, next) {
@@ -66,12 +88,19 @@ router.route('/login').post(function (req, res, next) {
       if (user) {
         console.log('body requsted password', req.body.password);
         console.log('yes there is user', user.password);
-        bcrypt.compare(body.req.password, user.password, function (err, hash) {
-          if (err) {
-            return next({ msg: 'password not valid', status: '404' });
-          }
-          res.json(hash);
-        });
+
+        const isMatched = passwordHash.verify(req.body.password, user.password);
+        console.log('ismatched>>>>>', isMatched);
+        if (isMatched) {
+          // const accessToken = jwt.sign(
+          //   { userName: req.body.userName },
+          //   '123123123123zzz'
+          // );
+          const accessToken = createToken(user);
+          res.json({ accessToken, user });
+        } else {
+          next({ msg: 'password not matched', status: '404' });
+        }
       } else {
         next({ msg: 'there is no user', status: '404' });
       }
